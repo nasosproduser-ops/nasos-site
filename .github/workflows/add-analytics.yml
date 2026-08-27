@@ -1,0 +1,54 @@
+name: Add Google Analytics
+
+on:
+  workflow_dispatch:
+  push:
+    paths-ignore:
+      - '.github/workflows/add-analytics.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  add-analytics:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout site
+        uses: actions/checkout@v4
+
+      - name: Add GA4 tag if missing
+        shell: python
+        run: |
+          from pathlib import Path
+
+          path = Path('index.html')
+          text = path.read_text(encoding='utf-8')
+          measurement_id = 'G-0K0T1DG80K'
+
+          if measurement_id in text:
+              print('Google Analytics tag already present.')
+              raise SystemExit(0)
+
+          tag = f'''\n<!-- Google Analytics 4 -->\n<script async src="https://www.googletagmanager.com/gtag/js?id={measurement_id}"></script>\n<script>\n  window.dataLayer = window.dataLayer || [];\n  function gtag(){{dataLayer.push(arguments);}}\n  gtag('js', new Date());\n  gtag('config', '{measurement_id}');\n</script>\n<!-- End Google Analytics 4 -->\n'''
+
+          lower = text.lower()
+          head_pos = lower.find('</head>')
+          if head_pos == -1:
+              raise SystemExit('Could not find </head> in index.html; no changes made.')
+
+          text = text[:head_pos] + tag + text[head_pos:]
+          path.write_text(text, encoding='utf-8')
+          print('Google Analytics tag added.')
+
+      - name: Commit change
+        shell: bash
+        run: |
+          if git diff --quiet -- index.html; then
+            echo 'No changes to commit.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          git commit -m 'Add Google Analytics 4 tracking'
+          git push
