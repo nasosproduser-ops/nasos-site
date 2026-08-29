@@ -18,9 +18,11 @@ jobs:
           p = Path('songs.html')
           s = p.read_text(encoding='utf-8')
           replacements = {
-              'SBR-0027-preview.mp3': 'SBR-0027_O_ΠΑΛΙΟΧΑΡΑΚΤΗΡΑ_ΣΟΥ.mp3',
+              'SBR-0027-preview.mp3': 'SBR-0027_Ο_ΠΑΛΙΟΧΑΡΑΚΤΗΡΑ_ΣΟΥ.mp3',
+              'SBR-0027_O_ΠΑΛΙΟΧΑΡΑΚΤΗΡΑ_ΣΟΥ.mp3': 'SBR-0027_Ο_ΠΑΛΙΟΧΑΡΑΚΤΗΡΑ_ΣΟΥ.mp3',
               'SBR-0028-preview.mp3': 'SBR-0028_ΕΛΑ_ΣΕ_ΜΕΝΑ.mp3',
-              'SBR-0029-preview.mp3': 'SBR-0029_ZHTA_MOY_OTI_ΘΕΣ.mp3',
+              'SBR-0029-preview.mp3': 'SBR-0029_ΖΗΤΑ_ΜΟΥ_ΟΤΙ_ΘΕΣ.mp3',
+              'SBR-0029_ZHTA_MOY_OTI_ΘΕΣ.mp3': 'SBR-0029_ΖΗΤΑ_ΜΟΥ_ΟΤΙ_ΘΕΣ.mp3',
           }
           for old, new in replacements.items():
               s = s.replace(old, new)
@@ -31,6 +33,5 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add songs.html
           git diff --cached --quiet && exit 0
-          git commit -m 'Fix SBR 0027-0029 audio paths'
+          git commit -m 'Fix actual SBR 0027-0029 filenames'
           git push
-
