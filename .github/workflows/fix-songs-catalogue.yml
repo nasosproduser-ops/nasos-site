@@ -1,0 +1,35 @@
+name: Fix songs catalogue
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Fix SBR 0027-0029 audio paths
+        shell: python
+        run: |
+          from pathlib import Path
+          p = Path('songs.html')
+          s = p.read_text(encoding='utf-8')
+          replacements = {
+              'SBR-0027-preview.mp3': 'SBR-0027_O_ΠΑΛΙΟΧΑΡΑΚΤΗΡΑ_ΣΟΥ.mp3',
+              'SBR-0028-preview.mp3': 'SBR-0028_ΕΛΑ_ΣΕ_ΜΕΝΑ.mp3',
+              'SBR-0029-preview.mp3': 'SBR-0029_ZHTA_MOY_OTI_ΘΕΣ.mp3',
+          }
+          for old, new in replacements.items():
+              s = s.replace(old, new)
+          p.write_text(s, encoding='utf-8')
+      - name: Commit and push if changed
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add songs.html
+          git diff --cached --quiet && exit 0
+          git commit -m 'Fix SBR 0027-0029 audio paths'
+          git push
