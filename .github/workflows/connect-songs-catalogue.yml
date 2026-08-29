@@ -2,7 +2,8 @@ name: Connect Songs Catalogue
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
 
 permissions:
   contents: write
@@ -16,21 +17,21 @@ jobs:
         with:
           fetch-depth: 1
 
-      - name: Add Songs Catalogue link safely
-        shell: python
+      - name: Add catalogue link
         run: |
+          python3 - <<'PY'
           from pathlib import Path
           import re
 
-          path = Path("index.html")
-          text = path.read_text(encoding="utf-8", errors="ignore")
+          path = Path('index.html')
+          text = path.read_text(encoding='utf-8', errors='ignore')
 
-          marker = 'id="nasos-song-catalogue-link"'
+          marker = 'nasos-song-catalogue-link'
           if marker in text:
-              print("Catalogue link already present; nothing to do.")
+              print('Catalogue link already present.')
               raise SystemExit(0)
 
-          block = r'''
+          block = '''
 <!-- NASOS SONGS CATALOGUE -->
 <style>
 #nasos-song-catalogue-link{position:fixed;right:22px;bottom:22px;z-index:99999;display:inline-flex;align-items:center;gap:8px;padding:12px 18px;border:1px solid #d4af37;border-radius:5px;background:#090909;color:#d4af37;text-decoration:none;font:700 12px/1 Arial,sans-serif;letter-spacing:1.5px;box-shadow:0 8px 24px rgba(0,0,0,.35)}
@@ -42,8 +43,7 @@ jobs:
 (function(){
   var target='songs.html';
   document.addEventListener('DOMContentLoaded',function(){
-    var links=document.querySelectorAll('a');
-    links.forEach(function(a){
+    document.querySelectorAll('a').forEach(function(a){
       var label=(a.textContent||'').trim().toLowerCase();
       if(label==='music' || label==='μουσική') a.setAttribute('href',target);
     });
@@ -53,22 +53,23 @@ jobs:
 <!-- END NASOS SONGS CATALOGUE -->
 '''
 
-          if re.search(r'</body\s*>', text, flags=re.I):
-              text = re.sub(r'</body\s*>', block + '\n</body>', text, count=1, flags=re.I)
+          if re.search(r'</body\\s*>', text, flags=re.I):
+              text = re.sub(r'</body\\s*>', block + '\n</body>', text, count=1, flags=re.I)
           else:
               text += '\n' + block + '\n'
 
-          path.write_text(text, encoding="utf-8")
-          print("Songs Catalogue link added to index.html")
+          path.write_text(text, encoding='utf-8')
+          print('Catalogue link added to index.html')
+          PY
 
       - name: Commit and push
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add index.html
           if git diff --cached --quiet; then
-            echo "No changes to commit."
+            echo 'No changes to commit.'
             exit 0
           fi
-          git commit -m "Connect site Music to 26-song catalogue"
+          git commit -m 'Connect Music to 26-song catalogue'
           git push
