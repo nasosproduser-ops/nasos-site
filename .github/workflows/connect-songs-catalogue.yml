@@ -1,0 +1,58 @@
+name: Connect Songs Catalogue
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/connect-songs-catalogue.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  connect:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout site
+        uses: actions/checkout@v4
+
+      - name: Add Songs Catalogue button safely
+        shell: python
+        run: |
+          from pathlib import Path
+
+          p = Path('index.html')
+          text = p.read_text(encoding='utf-8')
+          marker = '<!-- NASOS SONGS CATALOGUE BUTTON -->'
+
+          if marker in text:
+              print('Songs Catalogue button already present; nothing to do.')
+              raise SystemExit(0)
+
+          backup = Path('index_NASOS_SAFE_BACKUP_BEFORE_SONGS_LINK.html')
+          if not backup.exists():
+              backup.write_text(text, encoding='utf-8')
+
+          button = '''\n<!-- NASOS SONGS CATALOGUE BUTTON -->\n<a href="songs.html" aria-label="Songs Catalogue" style="position:fixed;right:24px;bottom:24px;z-index:9999;display:inline-block;padding:14px 22px;border-radius:999px;background:#111;color:#fff;text-decoration:none;font-family:Arial,sans-serif;font-weight:700;letter-spacing:.5px;box-shadow:0 6px 20px rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.18);">SONGS CATALOGUE</a>\n'''
+
+          lower = text.lower()
+          pos = lower.rfind('</body>')
+          if pos == -1:
+              text = text + button + '\n'
+          else:
+              text = text[:pos] + button + text[pos:]
+
+          p.write_text(text, encoding='utf-8')
+          print('Songs Catalogue button inserted.')
+
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html index_NASOS_SAFE_BACKUP_BEFORE_SONGS_LINK.html
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "Connect homepage to songs catalogue"
+            git push
+          fi
