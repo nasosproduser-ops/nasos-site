@@ -16,43 +16,41 @@ jobs:
       - name: Checkout site
         uses: actions/checkout@v4
 
-      - name: Add Songs Catalogue button safely
+      - name: Fix Songs Catalogue button count
         shell: python
         run: |
           from pathlib import Path
 
           p = Path('index.html')
           text = p.read_text(encoding='utf-8')
-          marker = '<!-- NASOS SONGS CATALOGUE BUTTON -->'
 
-          if marker in text:
-              print('Songs Catalogue button already present; nothing to do.')
-              raise SystemExit(0)
+          old_labels = [
+              'SONGS CATALOGUE — 26',
+              'SONGS CATALOGUE - 26',
+              'SONGS CATALOGUE 26',
+          ]
+          new_label = 'SONGS CATALOGUE — 29'
 
-          backup = Path('index_NASOS_SAFE_BACKUP_BEFORE_SONGS_LINK.html')
-          if not backup.exists():
-              backup.write_text(text, encoding='utf-8')
+          changed = False
+          for old in old_labels:
+              if old in text:
+                  text = text.replace(old, new_label)
+                  changed = True
 
-          button = '''\n<!-- NASOS SONGS CATALOGUE BUTTON -->\n<a href="songs.html" aria-label="Songs Catalogue" style="position:fixed;right:24px;bottom:24px;z-index:9999;display:inline-block;padding:14px 22px;border-radius:999px;background:#111;color:#fff;text-decoration:none;font-family:Arial,sans-serif;font-weight:700;letter-spacing:.5px;box-shadow:0 6px 20px rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.18);">SONGS CATALOGUE</a>\n'''
-
-          lower = text.lower()
-          pos = lower.rfind('</body>')
-          if pos == -1:
-              text = text + button + '\n'
+          if changed:
+              p.write_text(text, encoding='utf-8')
+              print('Songs Catalogue count changed from 26 to 29.')
           else:
-              text = text[:pos] + button + text[pos:]
-
-          p.write_text(text, encoding='utf-8')
-          print('Songs Catalogue button inserted.')
+              print('No old 26-count label found; leaving index.html unchanged.')
 
       - name: Commit changes
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index.html index_NASOS_SAFE_BACKUP_BEFORE_SONGS_LINK.html
+          git add index.html
           if git diff --cached --quiet; then
             echo "No changes to commit."
           else
-            git commit -m "Connect homepage to songs catalogue"
+            git commit -m "Update songs catalogue count to 29"
             git push
           fi
