@@ -33,3 +33,4 @@ jobs:
           git diff --cached --quiet && exit 0
           git commit -m 'Fix SBR 0027-0029 audio paths'
           git push
+
