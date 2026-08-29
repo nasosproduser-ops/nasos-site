@@ -379,9 +379,6 @@ const months=["Ιανουάριος","Φεβρουάριος","Μάρτιος","
 function drawCal(){let y=view.getFullYear(),m=view.getMonth();document.getElementById("monthTitle").textContent=months[m]+" "+y;let first=new Date(y,m,1),last=new Date(y,m+1,0),start=(first.getDay()+6)%7;let box=document.getElementById("days");box.innerHTML="";for(let i=0;i<start;i++){let e=document.createElement("button");e.className="empty";box.appendChild(e)}for(let d=1;d<=last.getDate();d++){let b=document.createElement("button");b.textContent=d;b.onclick=()=>{chosen=new Date(y,m,d);document.querySelectorAll(".days button").forEach(x=>x.classList.remove("selected"));b.classList.add("selected");document.getElementById("selectedDate").textContent=new Intl.DateTimeFormat("el-GR",{dateStyle:"full"}).format(chosen)};box.appendChild(b)}}
 function changeMonth(n){view.setMonth(view.getMonth()+n);drawCal()}drawCal();
 </script>
-
-<!-- NASOS SONGS CATALOGUE BUTTON -->
-<a href="songs.html" aria-label="Songs Catalogue" style="position:fixed;right:24px;bottom:24px;z-index:9999;display:inline-block;padding:14px 22px;border-radius:999px;background:#111;color:#fff;text-decoration:none;font-family:Arial,sans-serif;font-weight:700;letter-spacing:.5px;box-shadow:0 6px 20px rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.18);">SONGS CATALOGUE</a>
 </body></html>
 
 <!-- NASOS SONGS CATALOGUE -->
