@@ -1,0 +1,67 @@
+name: Add 16 Songs To Catalogue
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/add-16-songs.yml'
+      - 'SBR-0030_preview.mp3'
+      - 'SBR-0031_preview.mp3'
+      - 'SBR-0032_preview.mp3'
+      - 'SBR-0033_preview.mp3'
+      - 'SBR-0034_preview.mp3'
+      - 'SBR-0035_preview.mp3'
+      - 'SBR-0036_preview.mp3'
+      - 'SBR-0037_preview.mp3'
+      - 'SBR-0038_preview.mp3'
+      - 'SBR-0039_preview.mp3'
+      - 'SBR-0040_preview.mp3'
+      - 'SBR-0041_preview.mp3'
+      - 'SBR-0042_preview.mp3'
+      - 'SBR-0043_preview.mp3'
+      - 'SBR-0044_preview.mp3'
+      - 'SBR-0045_preview.mp3'
+
+permissions:
+  contents: write
+
+jobs:
+  add:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Append SBR-0030 to SBR-0045
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+
+          p = Path('songs.html')
+          text = p.read_text(encoding='utf-8')
+          if 'SBR-0030' in text:
+              print('SBR-0030 already present; nothing to do.')
+              raise SystemExit(0)
+
+          cards = []
+          for n in range(30, 46):
+              cards.append(f'''<article class="card"><div class="id">SBR-{n:04d}</div><div class="title">SBR-{n:04d}</div><div class="meta"><div><b>Genre</b><br>Original</div><div><b>Preview</b><br>1:00</div><div><b>Status</b><br>Available</div><div><b>Catalogue</b><br>Specialist Bond Records</div></div><span class="status">AVAILABLE</span><audio controls preload="metadata" src="SBR-{n:04d}_preview.mp3"></audio></article>''')
+
+          insertion = '\n'.join(cards) + '\n'
+          text = text.replace('</main>', insertion + '</main>', 1)
+          text = text.replace('SBR-0001 — SBR-0029', 'SBR-0001 — SBR-0045', 1)
+          text = text.replace('29 original songs by Νάσος.', '45 original songs by Νάσος.', 1)
+          p.write_text(text, encoding='utf-8')
+
+      - name: Commit catalogue
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add songs.html
+          if git diff --cached --quiet; then
+            echo "No catalogue changes."
+          else
+            git commit -m "Add SBR-0030 to SBR-0045 to songs catalogue"
+            git push
+          fi
