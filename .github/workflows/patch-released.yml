@@ -29,3 +29,4 @@ jobs:
               html = html.replace('</body>', patch + '</body>');
               await github.rest.repos.createOrUpdateFileContents({owner, repo, path, message:'Fix released song photos and Spotify links', content:Buffer.from(html,'utf8').toString('base64'), sha, branch:'main'});
             }
+            // rerun patch against the latest main after the other site workflows settle
