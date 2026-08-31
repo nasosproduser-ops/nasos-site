@@ -1,0 +1,48 @@
+name: Connect sale catalogue previews
+
+on:
+  push:
+    paths:
+      - '.github/workflows/connect-sale-previews.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  connect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Connect every SBR preview
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          p = Path('songs-for-sale.html')
+          s = p.read_text(encoding='utf-8')
+          files = list(Path('.').iterdir())
+          for n in range(1, 46):
+              code = f'SBR-{n:04d}'
+              candidates = [f.name for f in files if f.is_file() and f.name.lower().startswith(code.lower()) and 'preview' in f.name.lower() and '60s' in f.name.lower() and f.suffix.lower()=='.mp3']
+              if not candidates:
+                  raise SystemExit(f'No 60-second preview found for {code}')
+              fn = candidates[0]
+              audio = f'<audio controls preload="metadata" class="preview" src="{fn}"></audio>'
+              pat = rf'(<div class="song">\s*<div class="code">{re.escape(code)}</div><h2>.*?</h2>)'
+              def repl(m):
+                  block = m.group(1)
+                  if '<audio ' in block:
+                      return block
+                  return block + audio
+              s, count = re.subn(pat, repl, s, count=1, flags=re.S)
+              if count != 1:
+                  raise SystemExit(f'Could not update {code}')
+          p.write_text(s, encoding='utf-8')
+          PY
+      - name: Commit catalogue
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add songs-for-sale.html
+          git diff --cached --quiet || git commit -m 'Connect 60-second previews to Songs For Sale'
+          git push
