@@ -32,12 +32,54 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Fix released song cards
+        shell: python
+        run: |
+          from pathlib import Path
+          p = Path('index.html')
+          text = p.read_text(encoding='utf-8')
+          marker = '<!-- NASOS RELEASED SONG CARDS PATCH -->'
+          if marker not in text:
+              patch = r'''<!-- NASOS RELEASED SONG CARDS PATCH -->
+<script>
+(function(){
+  const photo='ChatGPT%20Image%2017%20%CE%91%CF%85%CE%B3%202026%2C%2012_33_57%20%CF%80.%CE%BC..png';
+  const songs=[
+    {title:'Δεν Με Ξέρεις',search:'ΝΑΣΟΣ Δεν Με Ξέρεις',photo:true},
+    {title:'Μη Φύγεις',search:'ΝΑΣΟΣ Μη Φύγεις',photo:true},
+    {title:'Μη Μου Λες Αντίο',search:'ΝΑΣΟΣ Μη Μου Λες Αντίο',photo:false},
+    {title:'Δώσε Μου Θάλασσα Να Πιω',search:'ΝΑΣΟΣ Δώσε Μου Θάλασσα Να Πιω',photo:false}
+  ];
+  function add(){
+    document.querySelectorAll('.music').forEach(card=>{
+      const t=(card.innerText||'').replace(/\s+/g,' ');
+      const song=songs.find(x=>t.includes(x.title));
+      if(!song||card.dataset.nasosPatched)return;
+      card.dataset.nasosPatched='1';
+      const cover=card.querySelector('.cover');
+      if(song.photo&&cover){
+        cover.innerHTML='<img src="'+photo+'" alt="ΝΑΣΟΣ — '+song.title+'" style="width:100%;height:100%;object-fit:cover;display:block;">';
+        cover.style.padding='0';cover.style.overflow='hidden';
+      }
+      const link=document.createElement('a');
+      link.href='https://open.spotify.com/search/'+encodeURIComponent(song.search);
+      link.target='_blank';link.rel='noopener';link.textContent='♫ SPOTIFY';
+      link.style.cssText='display:inline-block;margin-left:10px;background:transparent;color:#eee;border:1px solid #555;padding:10px 18px;text-decoration:none;font-weight:700;';
+      const b=card.querySelector('button');
+      if(b&&b.parentNode)b.parentNode.appendChild(link);else card.appendChild(link);
+    });
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',add);else add();
+})();
+</script>
+'''
+              text=text.replace('</body>',patch+'</body>',1)
+              p.write_text(text,encoding='utf-8')
+
       - name: Append SBR-0030 to SBR-0045
         shell: python
         run: |
           from pathlib import Path
-          import re
-
           p = Path('songs.html')
           text = p.read_text(encoding='utf-8')
           if 'SBR-0030' in text:
@@ -58,10 +100,10 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add songs.html
+          git add index.html songs.html
           if git diff --cached --quiet; then
             echo "No catalogue changes."
           else
-            git commit -m "Add SBR-0030 to SBR-0045 to songs catalogue"
+            git commit -m "Fix released song photos and Spotify links"
             git push
           fi
