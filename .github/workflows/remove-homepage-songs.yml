@@ -1,0 +1,37 @@
+name: Remove homepage song list
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Remove 16 song cards from homepage
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8', errors='ignore')
+          # Remove the homepage's 16-song card grid only.
+          s, n = re.subn(r'\n<div class="cards">.*?</div>\s*\n</section>', '\n</section>', s, count=1, flags=re.S|re.I)
+          if n != 1:
+              raise SystemExit(f'Could not find homepage song cards: matches={n}')
+          # Remove the text advertising 16 songs, leaving the Music heading intact.
+          s = re.sub(r'\n<p style="color:#aaa;max-width:760px;margin:0 auto 35px;text-align:center">\s*16 νέα τραγούδια.*?</p>\s*', '\n', s, count=1, flags=re.S|re.I)
+          # Keep the catalogue button at the very top of the Music section.
+          p.write_text(s, encoding='utf-8')
+      - name: Commit and remove this workflow
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          git rm .github/workflows/remove-homepage-songs.yml
+          git commit -m 'Remove 16 songs from homepage and keep catalogue link'
+          git push
