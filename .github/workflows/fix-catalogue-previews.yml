@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/fix-catalogue-previews.yml'
+      - '*.mp3'
 
 permissions:
   contents: write
@@ -15,8 +16,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Build 1 minute previews and read titles
+      - name: Build 1 minute previews and fix titles
         shell: bash
         run: |
           sudo apt-get update -qq
@@ -24,38 +24,30 @@ jobs:
           python3 - <<'PY'
           from pathlib import Path
           import subprocess, re
-
           root=Path('.')
           html=(root/'songs.html').read_text(encoding='utf-8')
-          titles={}
+          manual={'SBR-0027':'Ο Παλιοχαρακτήρας σου','SBR-0028':'Έλα σε μένα','SBR-0029':'Ζήτα μου ό,τι θες','SBR-0030':'Ανάβω ένα τσιγάρο','SBR-0031':'Άναψε η νύχτα','SBR-0032':'Εσένα ποιος σε ρώτησε'}
+          titles=dict(manual)
           for n in range(1,46):
               sid=f'SBR-{n:04d}'
-              candidates=[root/f'{sid}.mp3', root/f'{sid}_full.mp3', root/f'{sid}-full.mp3']
+              candidates=[root/f'{sid}.mp3',root/f'{sid}_full.mp3',root/f'{sid}-full.mp3']
               src=next((p for p in candidates if p.exists()),None)
               if src:
                   try:
                       out=subprocess.check_output(['ffprobe','-v','error','-show_entries','format_tags=title','-of','default=nw=1:nk=1',str(src)],text=True).strip()
-                      if out and out.upper()!=sid:
-                          titles[sid]=out
-                  except Exception:
-                      pass
-                  preview=root/f'{sid}_preview_60s.mp3'
-                  subprocess.run(['ffmpeg','-y','-loglevel','error','-i',str(src),'-t','60','-vn','-c:a','libmp3lame','-b:a','192k',str(preview)],check=True)
-
+                      if out and out.upper()!=sid and sid not in manual: titles[sid]=out
+                  except Exception: pass
+                  subprocess.run(['ffmpeg','-y','-loglevel','error','-i',str(src),'-t','60','-vn','-c:a','libmp3lame','-b:a','192k',str(root/f'{sid}_preview_60s.mp3')],check=True)
           for n in range(1,46):
-              sid=f'SBR-{n:04d}'
-              p=root/f'{sid}_preview_60s.mp3'
+              sid=f'SBR-{n:04d}'; p=root/f'{sid}_preview_60s.mp3'
               if p.exists():
                   html=re.sub(r'(<div class="id">'+sid+r'</div>.*?<audio\s+controls\s+preload="metadata"\s+src=")[^"]+("[^>]*></audio>)',r'\g<1>'+p.name+r'\g<2>',html,flags=re.S)
                   html=re.sub(r'(<div class="id">'+sid+r'</div>.*?<div><b>Preview</b><br>)[^<]*(</div>)',r'\g<1>1:00\g<2>',html,flags=re.S)
-              if sid in titles:
-                  html=re.sub(r'(<div class="id">'+sid+r'</div><div class="title">)[^<]+(</div>)',lambda m:m.group(1)+titles[sid]+m.group(2),html,count=1,flags=re.S)
-
+              if sid in titles: html=re.sub(r'(<div class="id">'+sid+r'</div><div class="title">)[^<]+(</div>)',lambda m:m.group(1)+titles[sid]+m.group(2),html,count=1,flags=re.S)
           html=html.replace('45-second previews, licensing και Music Store.','1-minute previews, licensing και Music Store.')
           html=html.replace('Previews, licensing και Music Store.','1-minute previews, licensing και Music Store.')
           (root/'songs.html').write_text(html,encoding='utf-8')
           PY
-
       - name: Commit fixes
         shell: bash
         run: |
@@ -63,5 +55,5 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add songs.html '*_preview_60s.mp3'
           if git diff --cached --quiet; then echo 'No changes.'; exit 0; fi
-          git commit -m 'Set all catalogue previews to one minute'
+          git commit -m 'Fix catalogue titles and one-minute previews'
           git push
