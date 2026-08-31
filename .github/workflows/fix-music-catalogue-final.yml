@@ -1,0 +1,54 @@
+name: Final Music Catalogue Fix
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Fix catalogue placement
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8', errors='ignore')
+
+          # Remove every previous catalogue badge/link block from the homepage.
+          patterns = [
+              r'\s*<!--\s*NASOS SONGS CATALOGUE.*?END NASOS SONGS CATALOGUE\s*-->\s*',
+              r'\s*<a[^>]*href=["\']songs\.html["\'][^>]*>\s*[♫♪]?\s*SONGS\s+CATALOGUE.*?</a>\s*',
+          ]
+          for pat in patterns:
+              s = re.sub(pat, '\n', s, flags=re.I|re.S)
+
+          # Remove any script that was only redirecting the Music navigation to songs.html.
+          s = re.sub(r'\s*<script>\s*\(function\(\)\{\s*var target=["\']songs\.html["\'];.*?</script>\s*', '\n', s, flags=re.I|re.S)
+
+          # Add one clean catalogue button INSIDE the Music section, immediately after its opening tag.
+          badge = '''\n<div class="songs-catalogue-entry" style="text-align:center;margin:0 auto 38px;max-width:700px;">
+  <a href="songs.html" style="display:inline-block;padding:14px 24px;border:1px solid #c8a56a;border-radius:6px;background:#090909;color:#c8a56a;text-decoration:none;font-weight:700;letter-spacing:2px;font-size:13px;">♫ SONGS CATALOGUE — 45</a>
+</div>\n'''
+          # Remove duplicate clean entries if one already exists.
+          s = re.sub(r'\s*<div class="songs-catalogue-entry".*?</div>\s*', '\n', s, flags=re.I|re.S)
+          m = re.search(r'<section\s+id=["\']music["\'][^>]*>', s, flags=re.I)
+          if not m:
+              raise SystemExit('Music section not found; no changes made.')
+          s = s[:m.end()] + badge + s[m.end():]
+          p.write_text(s, encoding='utf-8')
+
+      - name: Commit and remove workflow
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          git rm .github/workflows/fix-music-catalogue-final.yml
+          git commit -m 'Place 45-song catalogue inside Music section'
+          git push
