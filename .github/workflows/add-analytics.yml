@@ -16,12 +16,10 @@ jobs:
       - name: Checkout site
         uses: actions/checkout@v4
 
-      - name: Add GA4 and Songs Catalogue link
+      - name: Ensure GA4 only
         shell: python
         run: |
           from pathlib import Path
-          import re
-
           path = Path('index.html')
           text = path.read_text(encoding='utf-8', errors='ignore')
           changed = False
@@ -29,27 +27,11 @@ jobs:
           measurement_id = 'G-0K0T1DG80K'
           if measurement_id not in text:
               tag = f'''\n<!-- Google Analytics 4 -->\n<script async src="https://www.googletagmanager.com/gtag/js?id={measurement_id}"></script>\n<script>\n  window.dataLayer = window.dataLayer || [];\n  function gtag(){{dataLayer.push(arguments);}}\n  gtag('js', new Date());\n  gtag('config', '{measurement_id}');\n</script>\n<!-- End Google Analytics 4 -->\n'''
-              lower = text.lower()
-              head_pos = lower.find('</head>')
+              head_pos = text.lower().find('</head>')
               if head_pos == -1:
-                  raise SystemExit('Could not find </head> in index.html; no changes made.')
+                  raise SystemExit('Could not find </head> in index.html.')
               text = text[:head_pos] + tag + text[head_pos:]
               changed = True
-              print('Google Analytics tag added.')
-          else:
-              print('Google Analytics tag already present.')
-
-          marker = 'nasos-song-catalogue-link'
-          if marker not in text:
-              block = '''\n<!-- NASOS SONGS CATALOGUE -->\n<style>\n#nasos-song-catalogue-link{position:fixed;right:22px;bottom:22px;z-index:99999;display:inline-flex;align-items:center;gap:8px;padding:12px 18px;border:1px solid #d4af37;border-radius:5px;background:#090909;color:#d4af37;text-decoration:none;font:700 12px/1 Arial,sans-serif;letter-spacing:1.5px;box-shadow:0 8px 24px rgba(0,0,0,.35)}\n#nasos-song-catalogue-link:hover{background:#d4af37;color:#090909}\n@media(max-width:600px){#nasos-song-catalogue-link{right:12px;bottom:12px;padding:10px 13px;font-size:10px}}\n</style>\n<a id="nasos-song-catalogue-link" href="songs.html" aria-label="Open Songs Catalogue">♫ SONGS CATALOGUE — 26</a>\n<script>\n(function(){\n  var target='songs.html';\n  document.addEventListener('DOMContentLoaded',function(){\n    document.querySelectorAll('a').forEach(function(a){\n      var label=(a.textContent||'').trim().toLowerCase();\n      if(label==='music' || label==='μουσική') a.setAttribute('href',target);\n    });\n  });\n})();\n</script>\n<!-- END NASOS SONGS CATALOGUE -->\n'''
-              if re.search(r'</body\\s*>', text, flags=re.I):
-                  text = re.sub(r'</body\\s*>', block + '\n</body>', text, count=1, flags=re.I)
-              else:
-                  text += '\n' + block + '\n'
-              changed = True
-              print('Songs Catalogue link added.')
-          else:
-              print('Songs Catalogue link already present.')
 
           if changed:
               path.write_text(text, encoding='utf-8')
@@ -64,5 +46,5 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add index.html
-          git commit -m 'Connect Music to 26-song catalogue'
+          git commit -m 'Ensure Google Analytics 4'
           git push
