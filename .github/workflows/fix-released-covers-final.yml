@@ -14,17 +14,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Patch released cards
+      - name: Apply final released covers and Spotify links
         shell: python
         run: |
           from pathlib import Path
+          import re
           p=Path('index.html')
           s=p.read_text(encoding='utf-8')
-          marker='<!-- NASOS FINAL RELEASED COVERS AND SPOTIFY -->'
-          if marker in s:
-              print('Final patch already present')
-              raise SystemExit(0)
-          patch=r'''<!-- NASOS FINAL RELEASED COVERS AND SPOTIFY -->
+          marker='<!-- NASOS FINAL RELEASED COVERS AND SPOTIFY V2 -->'
+          # Remove any previous versions of our released-card scripts so only V2 remains.
+          s=re.sub(r'<!-- NASOS FINAL RELEASED COVERS AND SPOTIFY(?: V2)? -->.*?</script>\s*','',s,flags=re.S)
+          patch=r'''<!-- NASOS FINAL RELEASED COVERS AND SPOTIFY V2 -->
 <script>
 (function(){
   const covers={
@@ -42,16 +42,16 @@ jobs:
       const text=(card.innerText||'').replace(/\s+/g,' ');
       const title=Object.keys(spotify).find(t=>text.includes(t));
       if(!title)return;
-      if(card.dataset.finalReleasedFix==='1')return;
-      card.dataset.finalReleasedFix='1';
       const cover=card.querySelector('.cover');
       if(covers[title]&&cover){
         cover.classList.add('real-cover');
-        cover.innerHTML='<img src="'+covers[title]+'" alt="'+title+' — ΝΑΣΟΣ">';
+        cover.innerHTML='<img src="'+covers[title]+'" alt="'+title+' — ΝΑΣΟΣ" style="width:100%;height:100%;object-fit:cover;display:block;">';
+        cover.style.padding='0';
+        cover.style.overflow='hidden';
       }
-      if(!card.querySelector('.spotify-final-link')){
+      if(!card.querySelector('.spotify-v2-link')){
         const a=document.createElement('a');
-        a.className='spotify-final-link';
+        a.className='spotify-v2-link';
         a.href=spotify[title];
         a.target='_blank';
         a.rel='noopener noreferrer';
@@ -63,15 +63,18 @@ jobs:
     });
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',fix);else fix();
-  setTimeout(fix,1000);
+  setTimeout(fix,500);
+  setTimeout(fix,1500);
 })();
 </script>
 '''
-          p.write_text(s.replace('</body>',patch+'</body>',1),encoding='utf-8')
+          s=s.replace('</body>',patch+'</body>',1)
+          p.write_text(s,encoding='utf-8')
       - name: Commit
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add index.html
-          git commit -m 'Use uploaded released covers and add Spotify links'
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Use exact uploaded released covers and Spotify links'
           git push
