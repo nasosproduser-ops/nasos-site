@@ -1,0 +1,38 @@
+name: Final music section fix
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Replace homepage music section
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+          pattern = r'<section id="music" class="dark">.*?</section>'
+          replacement = '''<section id="music" class="dark">
+          <div class="eyebrow">MUSIC</div>
+          <h2>Μουσική</h2>
+          <div style="text-align:center;margin:10px auto 0;max-width:700px;">
+          <a href="songs.html" style="display:inline-block;padding:14px 24px;border:1px solid #c8a56a;border-radius:6px;background:#090909;color:#c8a56a;text-decoration:none;font-weight:700;letter-spacing:2px;font-size:13px;">♫ SONGS CATALOGUE — 45</a>
+          </div>
+          </section>'''
+          s2, n = re.subn(pattern, replacement, s, count=1, flags=re.S)
+          if n != 1:
+              raise SystemExit(f'music section not found: {n}')
+          p.write_text(s2, encoding='utf-8')
+      - name: Commit and remove workflow
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          git rm .github/workflows/final-music-fix.yml
+          git commit -m 'Final fix: remove homepage songs and place catalogue button'
+          git push
