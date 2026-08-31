@@ -1,0 +1,71 @@
+name: Fix catalogue previews and titles
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/fix-catalogue-previews.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build 45 second previews and read titles
+        shell: bash
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess, re
+
+          root=Path('.')
+          html=(root/'songs.html').read_text(encoding='utf-8')
+
+          # For every catalogue ID, prefer an existing full source file, otherwise
+          # keep the existing preview. Never replace a real title with an ID.
+          titles={}
+          for n in range(1,46):
+              sid=f'SBR-{n:04d}'
+              candidates=[root/f'{sid}.mp3', root/f'{sid}_full.mp3', root/f'{sid}-full.mp3']
+              src=next((p for p in candidates if p.exists()),None)
+              if src:
+                  try:
+                      out=subprocess.check_output(['ffprobe','-v','error','-show_entries','format_tags=title','-of','default=nw=1:nk=1',str(src)],text=True).strip()
+                      if out and out.upper()!=sid:
+                          titles[sid]=out
+                  except Exception:
+                      pass
+                  preview=root/f'{sid}_preview_45s.mp3'
+                  subprocess.run(['ffmpeg','-y','-loglevel','error','-i',str(src),'-t','45','-vn','-c:a','libmp3lame','-b:a','192k',str(preview)],check=True)
+
+          # Normalize every audio element to a real 45-second preview where one exists.
+          for n in range(1,46):
+              sid=f'SBR-{n:04d}'
+              p=root/f'{sid}_preview_45s.mp3'
+              if p.exists():
+                  html=re.sub(r'(<div class="id">'+sid+r'</div>.*?<audio\s+controls\s+preload="metadata"\s+src=")[^"]+("[^>]*></audio>)',r'\g<1>'+p.name+r'\g<2>',html,flags=re.S)
+                  html=re.sub(r'(<div class="id">'+sid+r'</div>.*?<div><b>Preview</b><br>)[^<]*(</div>)',r'\g<1>0:45\g<2>',html,flags=re.S)
+              if sid in titles:
+                  html=re.sub(r'(<div class="id">'+sid+r'</div><div class="title">)[^<]+(</div>)',lambda m:m.group(1)+titles[sid]+m.group(2),html,count=1,flags=re.S)
+
+          # Ensure the catalogue never shows a misleading full-track duration for previews.
+          html=html.replace('Previews, licensing και Music Store.','45-second previews, licensing και Music Store.')
+          (root/'songs.html').write_text(html,encoding='utf-8')
+          PY
+
+      - name: Commit fixes
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add songs.html '*_preview_45s.mp3'
+          if git diff --cached --quiet; then echo 'No changes.'; exit 0; fi
+          git commit -m 'Standardize catalogue to 45-second previews and song titles'
+          git push
