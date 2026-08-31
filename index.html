@@ -388,6 +388,45 @@ function changeMonth(n){view.setMonth(view.getMonth()+n);drawCal()}drawCal();
 </script>
 
 <!-- NASOS SONGS CATALOGUE BUTTON -->
-<!-- NASOS RELEASED SONG CARDS PATCH --><script>(function(){const p='ChatGPT%20Image%2017%20%CE%91%CF%85%CE%B3%202026%2C%2012_33_57%20%CF%80.%CE%BC..png';const s=[['Δεν Με Ξέρεις','ΝΑΣΟΣ Δεν Με Ξέρεις',1],['Μη Φύγεις','ΝΑΣΟΣ Μη Φύγεις',1],['Μη Μου Λες Αντίο','ΝΑΣΟΣ Μη Μου Λες Αντίο',0],['Δώσε Μου Θάλασσα Να Πιω','ΝΑΣΟΣ Δώσε Μου Θάλασσα Να Πιω',0]];function f(){document.querySelectorAll('.music').forEach(c=>{const t=(c.innerText||'').replace(/\s+/g,' ');const x=s.find(a=>t.includes(a[0]));if(!x||c.dataset.np)return;c.dataset.np='1';const v=c.querySelector('.cover');if(x[2]&&v){v.innerHTML='<img src="'+p+'" style="width:100%;height:100%;object-fit:cover;display:block" alt="ΝΑΣΟΣ — '+x[0]+'">';v.style.padding='0';v.style.overflow='hidden'}const a=document.createElement('a');a.href='https://open.spotify.com/search/'+encodeURIComponent(x[1]);a.target='_blank';a.rel='noopener';a.textContent='♫ SPOTIFY';a.style.cssText='display:inline-block;margin-left:10px;color:#eee;border:1px solid #555;padding:10px 18px;text-decoration:none;font-weight:700';const b=c.querySelector('button');b&&b.parentNode?b.parentNode.appendChild(a):c.appendChild(a)})}document.readyState==='loading'?document.addEventListener('DOMContentLoaded',f):f()})();</script></body></html>
+<!-- NASOS RELEASED SONG CARDS PATCH --><script>(function(){const p='ChatGPT%20Image%2017%20%CE%91%CF%85%CE%B3%202026%2C%2012_33_57%20%CF%80.%CE%BC..png';const s=[['Δεν Με Ξέρεις','ΝΑΣΟΣ Δεν Με Ξέρεις',1],['Μη Φύγεις','ΝΑΣΟΣ Μη Φύγεις',1],['Μη Μου Λες Αντίο','ΝΑΣΟΣ Μη Μου Λες Αντίο',0],['Δώσε Μου Θάλασσα Να Πιω','ΝΑΣΟΣ Δώσε Μου Θάλασσα Να Πιω',0]];function f(){document.querySelectorAll('.music').forEach(c=>{const t=(c.innerText||'').replace(/\s+/g,' ');const x=s.find(a=>t.includes(a[0]));if(!x||c.dataset.np)return;c.dataset.np='1';const v=c.querySelector('.cover');if(x[2]&&v){v.innerHTML='<img src="'+p+'" style="width:100%;height:100%;object-fit:cover;display:block" alt="ΝΑΣΟΣ — '+x[0]+'">';v.style.padding='0';v.style.overflow='hidden'}const a=document.createElement('a');a.href='https://open.spotify.com/search/'+encodeURIComponent(x[1]);a.target='_blank';a.rel='noopener';a.textContent='♫ SPOTIFY';a.style.cssText='display:inline-block;margin-left:10px;color:#eee;border:1px solid #555;padding:10px 18px;text-decoration:none;font-weight:700';const b=c.querySelector('button');b&&b.parentNode?b.parentNode.appendChild(a):c.appendChild(a)})}document.readyState==='loading'?document.addEventListener('DOMContentLoaded',f):f()})();</script><!-- NASOS RELEASED EXACT COVERS V4 -->
+<script>
+(function(){
+  const covers={
+    'Δεν Με Ξέρεις':'DEN_ME_XEREIS_NASOS_DistroKid_3000x3000.png',
+    'Μη Φύγεις':'ΜΗ ΦΥΓΕΙΣ.jpg'
+  };
+  const spotify={
+    'Δεν Με Ξέρεις':'https://open.spotify.com/search/'+encodeURIComponent('ΝΑΣΟΣ Δεν Με Ξέρεις'),
+    'Μη Φύγεις':'https://open.spotify.com/search/'+encodeURIComponent('ΝΑΣΟΣ Μη Φύγεις'),
+    'Μη Μου Λες Αντίο':'https://open.spotify.com/search/'+encodeURIComponent('ΝΑΣΟΣ Μη Μου Λες Αντίο'),
+    'Δώσε Μου Θάλασσα Να Πιω':'https://open.spotify.com/search/'+encodeURIComponent('ΝΑΣΟΣ Δώσε Μου Θάλασσα Να Πιω')
+  };
+  function fix(){
+    document.querySelectorAll('.music').forEach(function(card){
+      const text=(card.innerText||'').replace(/\s+/g,' ');
+      const title=Object.keys(spotify).find(function(t){return text.includes(t);});
+      if(!title)return;
+      const cover=card.querySelector('.cover');
+      if(covers[title]&&cover){
+        cover.classList.add('real-cover');
+        cover.innerHTML='<img src="'+covers[title]+'" alt="'+title+' — ΝΑΣΟΣ" style="width:100%;height:100%;object-fit:cover;display:block;">';
+        cover.style.padding='0';cover.style.overflow='hidden';
+      }
+      if(!card.querySelector('.spotify-v4-link')){
+        const a=document.createElement('a');
+        a.className='spotify-v4-link';
+        a.href=spotify[title];
+        a.target='_blank';a.rel='noopener noreferrer';a.textContent='♫ SPOTIFY';
+        a.style.cssText='display:inline-block;margin:10px 0 0 10px;padding:10px 18px;border:1px solid #555;color:#eee;background:transparent;text-decoration:none;font-weight:700;';
+        const button=card.querySelector('button');
+        if(button&&button.parentNode)button.parentNode.appendChild(a);else card.appendChild(a);
+      }
+    });
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',fix);else fix();
+  setTimeout(fix,500);setTimeout(fix,1500);
+})();
+</script>
+</body></html>
 
 
