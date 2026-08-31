@@ -1,64 +1,8 @@
 name: Add Google Analytics
-
 on:
   workflow_dispatch:
-  push:
-    paths-ignore:
-      - '.github/workflows/add-analytics.yml'
-      - '.github/workflows/fix-music-catalogue-final.yml'
-
-permissions:
-  contents: write
-
 jobs:
-  add-analytics:
+  disabled:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout site
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Ensure GA4, catalogue placement, released covers and Spotify links
-        shell: python
-        run: |
-          from pathlib import Path
-          import re
-          path=Path('index.html')
-          text=path.read_text(encoding='utf-8',errors='ignore')
-          measurement_id='G-0K0T1DG80K'
-          if measurement_id not in text:
-              tag=f'''\n<!-- Google Analytics 4 -->\n<script async src="https://www.googletagmanager.com/gtag/js?id={measurement_id}"></script>\n<script>window.dataLayer=window.dataLayer||[];function gtag(){{dataLayer.push(arguments);}}gtag('js',new Date());gtag('config','{measurement_id}');</script>\n<!-- End Google Analytics 4 -->\n'''
-              hp=text.lower().find('</head>')
-              if hp==-1: raise SystemExit('Could not find </head>.')
-              text=text[:hp]+tag+text[hp:]
-          text=re.sub(r'\s*<!--\s*NASOS SONGS CATALOGUE.*?END NASOS SONGS CATALOGUE\s*-->\s*','\n',text,flags=re.I|re.S)
-          text=re.sub(r'\s*<script>\s*\(function\(\)\{\s*var target=["\']songs\.html["\'];.*?</script>\s*','\n',text,flags=re.I|re.S)
-          text=re.sub(r'\s*<div class="songs-catalogue-entry".*?</div>\s*','\n',text,flags=re.I|re.S)
-          text=re.sub(r'\s*<a[^>]+href=["\']songs\.html["\'][^>]*>\s*[♫♪]?\s*SONGS\s+CATALOGUE.*?</a>\s*','\n',text,flags=re.I|re.S)
-          badge='''\n<div class="songs-catalogue-entry" style="text-align:center;margin:35px auto 10px;max-width:700px;"><a href="songs.html" style="display:inline-block;padding:14px 24px;border:1px solid #c8a56a;border-radius:6px;background:#090909;color:#c8a56a;text-decoration:none;font-weight:700;letter-spacing:2px;font-size:13px;">♫ SONGS CATALOGUE — 45</a></div>\n'''
-          m=re.search(r'<section\s+id=["\']music["\'][^>]*>',text,flags=re.I)
-          if not m: raise SystemExit('Music section not found.')
-          text=text[:m.end()]+badge+text[m.end():]
-          marker='<!-- NASOS FINAL RELEASED COVERS AND SPOTIFY -->'
-          if marker not in text:
-              patch=r'''<!-- NASOS FINAL RELEASED COVERS AND SPOTIFY -->
-<script>
-(function(){
-const covers={'Δεν Με Ξέρεις':'DEN_ME_XEREIS_NASOS_DistroKid_3000x3000.png','Μη Φύγεις':'ΜΗ ΦΥΓΕΙΣ.jpg'};
-const spotify={'Δεν Με Ξέρεις':'https://open.spotify.com/search/'+encodeURIComponent('ΝΑΣΟΣ Δεν Με Ξέρεις'),'Μη Φύγεις':'https://open.spotify.com/search/'+encodeURIComponent('ΝΑΣΟΣ Μη Φύγεις'),'Μη Μου Λες Αντίο':'https://open.spotify.com/search/'+encodeURIComponent('ΝΑΣΟΣ Μη Μου Λες Αντίο'),'Δώσε Μου Θάλασσα Να Πιω':'https://open.spotify.com/search/'+encodeURIComponent('ΝΑΣΟΣ Δώσε Μου Θάλασσα Να Πιω')};
-function fix(){document.querySelectorAll('.music').forEach(card=>{const t=(card.innerText||'').replace(/\s+/g,' ');const title=Object.keys(spotify).find(x=>t.includes(x));if(!title||card.dataset.finalReleasedFix==='1')return;card.dataset.finalReleasedFix='1';const cover=card.querySelector('.cover');if(covers[title]&&cover){cover.classList.add('real-cover');cover.innerHTML='<img src="'+covers[title]+'" alt="'+title+' — ΝΑΣΟΣ" style="width:100%;height:100%;display:block;object-fit:cover;">';}if(!card.querySelector('.spotify-final-link')){const a=document.createElement('a');a.className='spotify-final-link';a.href=spotify[title];a.target='_blank';a.rel='noopener noreferrer';a.textContent='♫ SPOTIFY';a.style.cssText='display:inline-block;margin:10px 0 0 10px;padding:10px 18px;border:1px solid #555;color:#eee;background:transparent;text-decoration:none;font-weight:700;';const b=card.querySelector('button');if(b&&b.parentNode)b.parentNode.appendChild(a);else card.appendChild(a);}})}
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',fix);else fix();setTimeout(fix,1000);
-})();
-</script>
-'''
-              text=text.replace('</body>',patch+'</body>',1)
-          path.write_text(text,encoding='utf-8')
-      - name: Commit placement fix
-        shell: bash
-        run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add index.html
-          if git diff --cached --quiet; then echo 'No changes.'; exit 0; fi
-          git commit -m 'Fix released covers and Spotify links'
-          git push
+      - run: echo "Disabled to prevent site rewrite conflicts."
