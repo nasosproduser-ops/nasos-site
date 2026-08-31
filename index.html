@@ -533,23 +533,4 @@ function changeMonth(n){view.setMonth(view.getMonth()+n);drawCal()}drawCal();
 <a href="songs.html" aria-label="Songs Catalogue" style="position:fixed;right:24px;bottom:24px;z-index:9999;display:inline-block;padding:14px 22px;border-radius:999px;background:#111;color:#fff;text-decoration:none;font-family:Arial,sans-serif;font-weight:700;letter-spacing:.5px;box-shadow:0 6px 20px rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.18);">SONGS CATALOGUE</a>
 </body></html>
 
-<!-- NASOS SONGS CATALOGUE -->
-<style>
-#nasos-song-catalogue-link{position:fixed;right:22px;bottom:22px;z-index:99999;display:inline-flex;align-items:center;gap:8px;padding:12px 18px;border:1px solid #d4af37;border-radius:5px;background:#090909;color:#d4af37;text-decoration:none;font:700 12px/1 Arial,sans-serif;letter-spacing:1.5px;box-shadow:0 8px 24px rgba(0,0,0,.35)}
-#nasos-song-catalogue-link:hover{background:#d4af37;color:#090909}
-@media(max-width:600px){#nasos-song-catalogue-link{right:12px;bottom:12px;padding:10px 13px;font-size:10px}}
-</style>
-<a id="nasos-song-catalogue-link" href="songs.html" aria-label="Open Songs Catalogue"></a>
-<script>
-(function(){
-  var target='songs.html';
-  document.addEventListener('DOMContentLoaded',function(){
-    document.querySelectorAll('a').forEach(function(a){
-      var label=(a.textContent||'').trim().toLowerCase();
-      if(label==='music' || label==='μουσική') a.setAttribute('href',target);
-    });
-  });
-})();
-</script>
-<!-- END NASOS SONGS CATALOGUE -->
 
