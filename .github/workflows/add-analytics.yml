@@ -5,6 +5,7 @@ on:
   push:
     paths-ignore:
       - '.github/workflows/add-analytics.yml'
+      - '.github/workflows/fix-music-catalogue-final.yml'
 
 permissions:
   contents: write
@@ -15,36 +16,48 @@ jobs:
     steps:
       - name: Checkout site
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Ensure GA4 only
+      - name: Ensure GA4 and fix catalogue placement
         shell: python
         run: |
           from pathlib import Path
+          import re
           path = Path('index.html')
           text = path.read_text(encoding='utf-8', errors='ignore')
-          changed = False
 
           measurement_id = 'G-0K0T1DG80K'
           if measurement_id not in text:
               tag = f'''\n<!-- Google Analytics 4 -->\n<script async src="https://www.googletagmanager.com/gtag/js?id={measurement_id}"></script>\n<script>\n  window.dataLayer = window.dataLayer || [];\n  function gtag(){{dataLayer.push(arguments);}}\n  gtag('js', new Date());\n  gtag('config', '{measurement_id}');\n</script>\n<!-- End Google Analytics 4 -->\n'''
               head_pos = text.lower().find('</head>')
               if head_pos == -1:
-                  raise SystemExit('Could not find </head> in index.html.')
+                  raise SystemExit('Could not find </head>.')
               text = text[:head_pos] + tag + text[head_pos:]
-              changed = True
 
-          if changed:
-              path.write_text(text, encoding='utf-8')
+          # Remove any old catalogue block/link from the homepage.
+          text = re.sub(r'\s*<!--\s*NASOS SONGS CATALOGUE.*?END NASOS SONGS CATALOGUE\s*-->\s*', '\n', text, flags=re.I|re.S)
+          text = re.sub(r'\s*<script>\s*\(function\(\)\{\s*var target=["\']songs\.html["\'];.*?</script>\s*', '\n', text, flags=re.I|re.S)
+          text = re.sub(r'\s*<div class="songs-catalogue-entry".*?</div>\s*', '\n', text, flags=re.I|re.S)
+          text = re.sub(r'\s*<a[^>]+href=["\']songs\.html["\'][^>]*>\s*[♫♪]?\s*SONGS\s+CATALOGUE.*?</a>\s*', '\n', text, flags=re.I|re.S)
 
-      - name: Commit change
+          # Add the button only inside the Music section.
+          badge = '''\n<div class="songs-catalogue-entry" style="text-align:center;margin:35px auto 10px;max-width:700px;">\n<a href="songs.html" style="display:inline-block;padding:14px 24px;border:1px solid #c8a56a;border-radius:6px;background:#090909;color:#c8a56a;text-decoration:none;font-weight:700;letter-spacing:2px;font-size:13px;">♫ SONGS CATALOGUE — 45</a>\n</div>\n'''
+          m = re.search(r'<section\s+id=["\']music["\'][^>]*>', text, flags=re.I)
+          if not m:
+              raise SystemExit('Music section not found.')
+          text = text[:m.end()] + badge + text[m.end():]
+          path.write_text(text, encoding='utf-8')
+
+      - name: Commit placement fix
         shell: bash
         run: |
-          if git diff --quiet -- index.html; then
-            echo 'No changes to commit.'
-            exit 0
-          fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add index.html
-          git commit -m 'Ensure Google Analytics 4'
+          if git diff --cached --quiet; then
+            echo 'No changes.'
+            exit 0
+          fi
+          git commit -m 'Place 45-song catalogue inside Music section'
           git push
