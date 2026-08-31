@@ -1,0 +1,37 @@
+name: Connect 60s catalogue previews
+
+on:
+  push:
+    paths:
+      - '.github/workflows/connect-60s-previews.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  connect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Connect SBR-0001 to SBR-0029 previews
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          p = Path('songs.html')
+          s = p.read_text(encoding='utf-8')
+          mapping = {
+            1:'SBR-0001 - Εγώ που ήμουν σίγουρος_PREVIEW_60s.mp3',2:'SBR-0002 - Είσαι η νότα_PREVIEW_60s.mp3',3:'SBR-0003 - Εσένα ήθελα εδώ_PREVIEW_60s.mp3',4:'SBR-0004 - Ζούμε τη νύχτα_PREVIEW_60s.mp3',5:'SBR-0005 - Ήσουνα δική μου_PREVIEW_60s.mp3',6:'SBR-0006 - Μη φύγεις από μέσα μου_PREVIEW_60s.mp3',7:'SBR-0007 - Χωρίς Φτερά_PREVIEW_60s.mp3',8:'SBR-0008 - Δώσε μου χαρά_PREVIEW_60s.mp3',9:"SBR-0009 - Ένα σ' αγαπώ_PREVIEW_60s.mp3",10:'SBR-0010 - Ακόμα σε σκέφτομαι_PREVIEW_60s.mp3',11:'SBR-0011 - Μια αγκαλιά_PREVIEW_60s.mp3',12:'SBR-0012 - Σε χάνω_PREVIEW_60s.mp3',13:'SBR-0013 - Χαρακιές_PREVIEW_60s.mp3',14:'SBR-0014 - Όταν είσαι εδώ_PREVIEW_60s.mp3',15:'SBR-0015 - Άναψε η Νύχτα_PREVIEW_60s.mp3',16:'SBR-0016 - Άνεμος_PREVIEW_60s.mp3',17:"SBR-0017 - Δείξ' το μου_PREVIEW_60s.mp3",18:'SBR-0018 - Καριόλα_PREVIEW_60s.mp3',19:'SBR-0019 - Σαν σκιά_PREVIEW_60s.mp3',20:'SBR-0020 - Τέλος_PREVIEW_60s.mp3',21:'SBR-0021 - Ανατολικά_PREVIEW_60s.mp3',22:'SBR-0022 - Κωνσταντινούπολη_PREVIEW_60s.mp3',23:'SBR-0023 - Φύγε_PREVIEW_60s.mp3',24:'SBR-0024 - Χόρεψε_PREVIEW_60s.mp3',25:'SBR-0025 - Έλα_PREVIEW_60s.mp3',26:'SBR-0026 - Αναμνήσεις_PREVIEW_60s.mp3',27:'SBR-0027_PREVIEW_60s.mp3',28:'SBR-0028_PREVIEW_60s.mp3',29:'SBR-0029_PREVIEW_60s.mp3'}
+          for n, fn in mapping.items():
+              pat = rf'(SBR-{n:04d}.*?<audio\s+controls\s+preload="metadata"\s+src=")[^"]+("\s*></audio>)'
+              s, count = re.subn(pat, lambda m, fn=fn: m.group(1)+fn+m.group(2), s, count=1, flags=re.S)
+              if count != 1: raise SystemExit(f'Could not update SBR-{n:04d}')
+          p.write_text(s, encoding='utf-8')
+          PY
+      - name: Commit catalogue
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add songs.html
+          git diff --cached --quiet || git commit -m 'Connect 60-second previews to catalogue'
+          git push
