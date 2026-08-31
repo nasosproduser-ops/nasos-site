@@ -1,0 +1,31 @@
+name: Patch released songs
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/patch-released.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const path = 'index.html';
+            const current = await github.rest.repos.getContent({owner, repo, path, ref: 'main'});
+            const sha = current.data.sha;
+            let html = Buffer.from(current.data.content, 'base64').toString('utf8');
+            const marker = '<!-- NASOS RELEASED SONG CARDS PATCH -->';
+            if (!html.includes(marker)) {
+              const photo = 'ChatGPT%20Image%2017%20%CE%91%CF%85%CE%B3%202026%2C%2012_33_57%20%CF%80.%CE%BC..png';
+              const patch = `${marker}<script>(function(){const p='${photo}';const s=[['Δεν Με Ξέρεις','ΝΑΣΟΣ Δεν Με Ξέρεις',1],['Μη Φύγεις','ΝΑΣΟΣ Μη Φύγεις',1],['Μη Μου Λες Αντίο','ΝΑΣΟΣ Μη Μου Λες Αντίο',0],['Δώσε Μου Θάλασσα Να Πιω','ΝΑΣΟΣ Δώσε Μου Θάλασσα Να Πιω',0]];function f(){document.querySelectorAll('.music').forEach(c=>{const t=(c.innerText||'').replace(/\\s+/g,' ');const x=s.find(a=>t.includes(a[0]));if(!x||c.dataset.np)return;c.dataset.np='1';const v=c.querySelector('.cover');if(x[2]&&v){v.innerHTML='<img src="'+p+'" style="width:100%;height:100%;object-fit:cover;display:block" alt="ΝΑΣΟΣ — '+x[0]+'">';v.style.padding='0';v.style.overflow='hidden'}const a=document.createElement('a');a.href='https://open.spotify.com/search/'+encodeURIComponent(x[1]);a.target='_blank';a.rel='noopener';a.textContent='♫ SPOTIFY';a.style.cssText='display:inline-block;margin-left:10px;color:#eee;border:1px solid #555;padding:10px 18px;text-decoration:none;font-weight:700';const b=c.querySelector('button');b&&b.parentNode?b.parentNode.appendChild(a):c.appendChild(a)})}document.readyState==='loading'?document.addEventListener('DOMContentLoaded',f):f()})();</script>`;
+              html = html.replace('</body>', patch + '</body>');
+              await github.rest.repos.createOrUpdateFileContents({owner, repo, path, message:'Fix released song photos and Spotify links', content:Buffer.from(html,'utf8').toString('base64'), sha, branch:'main'});
+            }
