@@ -393,6 +393,6 @@ function changeMonth(n){view.setMonth(view.getMonth()+n);drawCal()}drawCal();
 </script>
 
 <!-- NASOS SONGS CATALOGUE BUTTON -->
-</body></html>
+<!-- NASOS RELEASED SONG CARDS PATCH --><script>(function(){const p='ChatGPT%20Image%2017%20%CE%91%CF%85%CE%B3%202026%2C%2012_33_57%20%CF%80.%CE%BC..png';const s=[['Δεν Με Ξέρεις','ΝΑΣΟΣ Δεν Με Ξέρεις',1],['Μη Φύγεις','ΝΑΣΟΣ Μη Φύγεις',1],['Μη Μου Λες Αντίο','ΝΑΣΟΣ Μη Μου Λες Αντίο',0],['Δώσε Μου Θάλασσα Να Πιω','ΝΑΣΟΣ Δώσε Μου Θάλασσα Να Πιω',0]];function f(){document.querySelectorAll('.music').forEach(c=>{const t=(c.innerText||'').replace(/\s+/g,' ');const x=s.find(a=>t.includes(a[0]));if(!x||c.dataset.np)return;c.dataset.np='1';const v=c.querySelector('.cover');if(x[2]&&v){v.innerHTML='<img src="'+p+'" style="width:100%;height:100%;object-fit:cover;display:block" alt="ΝΑΣΟΣ — '+x[0]+'">';v.style.padding='0';v.style.overflow='hidden'}const a=document.createElement('a');a.href='https://open.spotify.com/search/'+encodeURIComponent(x[1]);a.target='_blank';a.rel='noopener';a.textContent='♫ SPOTIFY';a.style.cssText='display:inline-block;margin-left:10px;color:#eee;border:1px solid #555;padding:10px 18px;text-decoration:none;font-weight:700';const b=c.querySelector('button');b&&b.parentNode?b.parentNode.appendChild(a):c.appendChild(a)})}document.readyState==='loading'?document.addEventListener('DOMContentLoaded',f):f()})();</script></body></html>
 
 
