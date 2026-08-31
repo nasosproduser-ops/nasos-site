@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://nasosproduser-ops.github.io/nasos-site/sitemap.xml
