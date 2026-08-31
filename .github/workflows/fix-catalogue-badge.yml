@@ -1,0 +1,32 @@
+name: Fix catalogue badge
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Change 29 to 45 in songs catalogue badge
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+          p = Path('songs.html')
+          s = p.read_text(encoding='utf-8')
+          s2, n = re.subn(r'(SONGS\s+CATALOGUE\s*[—-]\s*)29\b', r'\g<1>45', s, count=1, flags=re.I)
+          if n == 0:
+              raise SystemExit('Catalogue badge with 29 was not found in songs.html')
+          p.write_text(s2, encoding='utf-8')
+      - name: Commit and remove workflow
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add songs.html
+          git rm .github/workflows/fix-catalogue-badge.yml
+          git commit -m 'Fix songs catalogue badge to 45'
+          git push
