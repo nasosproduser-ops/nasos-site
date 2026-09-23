@@ -109,6 +109,82 @@ footer{text-align:center;padding:30px;border-top:1px solid #222;color:#777;font-
   object-fit:cover;
 }
 
+.music.new-release .release-cover{
+  min-height:220px;
+  padding:0;
+  overflow:hidden;
+  position:relative;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(200,165,106,.24), transparent 34%),
+    linear-gradient(145deg,#090909 5%,#241316 52%,#080808 100%);
+}
+.music.new-release .release-cover:before{
+  content:"";
+  position:absolute;
+  inset:16px;
+  border:1px solid rgba(200,165,106,.45);
+  border-radius:8px;
+  pointer-events:none;
+}
+.music.new-release .release-cover .release-art{
+  position:relative;
+  z-index:1;
+  height:100%;
+  min-height:220px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:24px;
+}
+.music.new-release .release-art .release-brand{
+  color:#c8a56a;
+  font-size:11px;
+  letter-spacing:3px;
+  font-weight:700;
+  margin-bottom:12px;
+}
+.music.new-release .release-art .release-title{
+  color:#f4f1ec;
+  font-size:31px;
+  line-height:1.05;
+  font-weight:900;
+  letter-spacing:1px;
+}
+.music.new-release .release-art .release-subtitle{
+  margin-top:12px;
+  color:#c8a56a;
+  font-size:11px;
+  letter-spacing:3px;
+  font-weight:700;
+}
+.music.new-release .release-meta{
+  color:#a99fa1;
+  font-size:13px;
+  margin:0 0 12px;
+}
+.music.new-release .release-credit{
+  color:#ddd;
+  font-size:12px;
+  margin:0 0 10px;
+}
+.music.new-release .release-link{
+  display:inline-block;
+  margin:10px 0 0 0;
+  padding:10px 18px;
+  border:1px solid #6b4b53;
+  color:#c8a56a;
+  background:#160e10;
+  text-decoration:none;
+  font-weight:800;
+  letter-spacing:.4px;
+}
+.music.new-release .release-link:hover{
+  background:#241317;
+  border-color:#c8a56a;
+}
+
 
 .about-highlight{font-size:18px;color:#ddd}
 #about p{color:#c9c9c9}
@@ -273,13 +349,39 @@ footer{background:#050505}
   <div class="eyebrow" style="text-align:center;margin-bottom:10px;">ΚΥΚΛΟΦΟΡΗΜΕΝΑ</div>
   <h3 style="text-align:center;font-size:28px;margin:0 0 28px;">Τα τραγούδια μου</h3>
   <div class="cards">
+    <article class="music new-release">
+      <div class="cover release-cover">
+        <div class="release-art">
+          <div class="release-brand">SPECIALIST BOND RECORDS</div>
+          <div class="release-title">ΦΥΓΕ ΤΩΡΑ</div>
+          <div class="release-subtitle">NASOS</div>
+        </div>
+      </div>
+      <h3>Φύγε τώρα</h3>
+      <p class="release-meta">Νέα κυκλοφορία</p>
+      <p class="release-credit">Στίχοι &amp; Μουσική: ΝΑΣΟΣ</p>
+      <a class="release-link" href="https://open.spotify.com/album/4YkYmiaaJ5hT5B1dHlL6KP" target="_blank" rel="noopener noreferrer">♫ ΑΚΟΥΣΕ ΣΤΟ SPOTIFY</a>
+    </article>
+    <article class="music new-release">
+      <div class="cover release-cover">
+        <div class="release-art">
+          <div class="release-brand">SPECIALIST BOND RECORDS</div>
+          <div class="release-title">ΕΡΩΤΑ</div>
+          <div class="release-subtitle">NASOS</div>
+        </div>
+      </div>
+      <h3>Έρωτα</h3>
+      <p class="release-meta">Νέα κυκλοφορία</p>
+      <p class="release-credit">Στίχοι &amp; Μουσική: ΝΑΣΟΣ</p>
+      <a class="release-link" href="https://open.spotify.com/album/5DNadGBFFLwVBtaZR2XBVW" target="_blank" rel="noopener noreferrer">♫ ΑΚΟΥΣΕ ΣΤΟ SPOTIFY</a>
+    </article>
     <article class="music"><div class="cover real-cover"><img src="DEN_ME_XEREIS_NASOS_DistroKid_3000x3000.png" alt="Δεν Με Ξέρεις"></div><h3>Δεν Με Ξέρεις</h3><p>Κυκλοφορημένο τραγούδι</p><button onclick="demo('ΔΕΝ ΜΕ ΞΕΡΕΙΣ',this)">▶ ΑΚΟΥΣΕ ΤΟ ΤΡΑΓΟΥΔΙ</button><a href="https://open.spotify.com/search/%CE%9D%CE%91%CE%A3%CE%9F%CE%A3%20%CE%94%CE%B5%CE%BD%20%CE%9C%CE%B5%20%CE%9E%CE%AD%CF%81%CE%B5%CE%B9%CF%82" target="_blank" rel="noopener noreferrer" style="display:inline-block;margin:10px 0 0 10px;padding:10px 18px;border:1px solid #555;color:#eee;background:transparent;text-decoration:none;font-weight:700;">♫ SPOTIFY</a></article>
     <article class="music"><div class="cover real-cover"><img src="ΜΗ ΦΥΓΕΙΣ.jpg" alt="Μη Φύγεις"></div><h3>Μη Φύγεις</h3><p>Κυκλοφορημένο τραγούδι</p><button onclick="demo('ΜΗ ΦΥΓΕΙΣ',this)">▶ ΑΚΟΥΣΕ ΤΟ ΤΡΑΓΟΥΔΙ</button><a href="https://open.spotify.com/search/%CE%9D%CE%91%CE%A3%CE%9F%CE%A3%20%CE%9C%CE%B7%20%CE%A6%CF%8D%CE%B3%CE%B5%CE%B9%CF%82" target="_blank" rel="noopener noreferrer" style="display:inline-block;margin:10px 0 0 10px;padding:10px 18px;border:1px solid #555;color:#eee;background:transparent;text-decoration:none;font-weight:700;">♫ SPOTIFY</a></article>
     <article class="music"><div class="cover real-cover"><img src="MH_MOU_LES_ANTIO_3000x3000.png" alt="Μη Μου Λες Αντίο"></div><h3>Μη Μου Λες Αντίο</h3><p>Κυκλοφορημένο τραγούδι</p><button onclick="demo('ΜΗ ΜΟΥ ΛΕΣ ΑΝΤΙΟ',this)">▶ ΑΚΟΥΣΕ ΤΟ ΤΡΑΓΟΥΔΙ</button><a href="https://open.spotify.com/search/%CE%9D%CE%91%CE%A3%CE%9F%CE%A3%20%CE%9C%CE%B7%20%CE%9C%CE%BF%CF%85%20%CE%9B%CE%B5%CF%82%20%CE%91%CE%BD%CF%84%CE%AF%CE%BF" target="_blank" rel="noopener noreferrer" style="display:inline-block;margin:10px 0 0 10px;padding:10px 18px;border:1px solid #555;color:#eee;background:transparent;text-decoration:none;font-weight:700;">♫ SPOTIFY</a></article>
     <article class="music"><div class="cover real-cover"><img src="NASOS_Dose_Mou_Thalassa_Na_Pio_DistroKid_3000x3000.jpg" alt="Δώσε Μου Θάλασσα Να Πιω"></div><h3>Δώσε Μου Θάλασσα Να Πιω</h3><p>Κυκλοφορημένο τραγούδι</p><button onclick="demo('ΔΩΣΕ ΜΟΥ ΘΑΛΑΣΣΑ ΝΑ ΠΙΩ',this)">▶ ΑΚΟΥΣΕ ΤΟ ΤΡΑΓΟΥΔΙ</button><a href="https://open.spotify.com/search/%CE%9D%CE%91%CE%A3%CE%9F%CE%A3%20%CE%94%CF%8E%CF%83%CE%B5%20%CE%9C%CE%BF%CF%85%20%CE%98%CE%AC%CE%BB%CE%B1%CF%83%CF%83%CE%B1%20%CE%9D%CE%B1%20%CE%A0%CE%B9%CF%89" target="_blank" rel="noopener noreferrer" style="display:inline-block;margin:10px 0 0 10px;padding:10px 18px;border:1px solid #555;color:#eee;background:transparent;text-decoration:none;font-weight:700;">♫ SPOTIFY</a></article>
   </div>
 </div>
-<div style="text-align:center;max-width:900px;margin:0 auto;"><p style="color:#b9b0b2;">Όλα τα διαθέσιμα τραγούδια του Νάσου βρίσκονται στον επίσημο κατάλογο.</p><a href="songs.html" style="display:inline-block;margin-top:12px;padding:14px 24px;border:1px solid #c8a56a;border-radius:6px;background:#090909;color:#c8a56a;text-decoration:none;font-weight:700;letter-spacing:2px;font-size:13px;">♫ SONGS CATALOGUE — 45</a></div>
+<div style="text-align:center;max-width:900px;margin:0 auto;"><p style="color:#b9b0b2;">Όλα τα διαθέσιμα τραγούδια του Νάσου βρίσκονται στον επίσημο κατάλογο.</p><a href="songs.html" style="display:inline-block;margin-top:12px;padding:14px 24px;border:1px solid #c8a56a;border-radius:6px;background:#090909;color:#c8a56a;text-decoration:none;font-weight:700;letter-spacing:2px;font-size:13px;">♫ SONGS CATALOGUE — 47</a></div>
 </section>
 <section id="calendar"><div class="eyebrow">CALENDAR</div><h2>Ημερολόγιο</h2><div class="calendar-wrap"><div class="calendar"><div class="cal-head"><button onclick="changeMonth(-1)">‹</button><div class="cal-title" id="monthTitle"></div><button onclick="changeMonth(1)">›</button></div><div class="week"><div>ΔΕ</div><div>ΤΡ</div><div>ΤΕ</div><div>ΠΕ</div><div>ΠΑ</div><div>ΣΑ</div><div>ΚΥ</div></div><div class="days" id="days"></div></div><div class="notes"><h3>Επιλεγμένη ημερομηνία</h3><div class="selected-date" id="selectedDate">—</div><p>Εδώ μπορούμε να προσθέσουμε αργότερα εμφανίσεις, live, κυκλοφορίες, πρόβες και σημαντικές ημερομηνίες.</p></div></div></section>
 
