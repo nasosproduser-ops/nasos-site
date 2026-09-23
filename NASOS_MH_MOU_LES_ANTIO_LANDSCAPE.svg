@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1000 1000" width="1000" height="1000">
+  <defs>
+    <linearGradient id="fade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#000" stop-opacity="0"/>
+      <stop offset="0.72" stop-color="#050505" stop-opacity="0.04"/>
+      <stop offset="1" stop-color="#050505" stop-opacity="0.88"/>
+    </linearGradient>
+  </defs>
+  <svg x="0" y="0" width="1000" height="1000" viewBox="850 0 1198 2048" preserveAspectRatio="xMidYMid slice">
+    <image href="https://nasosproduser-ops.github.io/nasos-site/MH_MOU_LES_ANTIO_3000x3000.png" x="0" y="0" width="2048" height="2048" preserveAspectRatio="none"/>
+  </svg>
+  <rect width="1000" height="1000" fill="url(#fade)"/>
+  <rect x="30" y="30" width="940" height="940" fill="none" stroke="#c8a56a" stroke-opacity=".42" rx="10"/>
+  <text x="500" y="865" text-anchor="middle" fill="#f3e6c8" font-family="Georgia,serif" font-size="42" letter-spacing="8">ΝΑΣΟΣ</text>
+  <line x1="270" y1="885" x2="730" y2="885" stroke="#c8a56a" stroke-opacity=".65"/>
+  <text x="500" y="920" text-anchor="middle" fill="#f4f4f4" font-family="Arial,Helvetica,sans-serif" font-size="18" letter-spacing="3">ΣΤΙΧΟΙ &amp; ΜΟΥΣΙΚΗ: ΝΑΣΟΣ</text>
+  <text x="500" y="960" text-anchor="middle" fill="#c8a56a" font-family="Arial,Helvetica,sans-serif" font-size="16" letter-spacing="4">SPECIALIST BOND RECORDS</text>
+</svg>
