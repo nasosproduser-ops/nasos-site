@@ -109,6 +109,51 @@ footer{text-align:center;padding:30px;border-top:1px solid #222;color:#777;font-
   object-fit:cover;
 }
 
+.landscape-only{
+  position:relative;
+  min-height:220px;
+  height:220px;
+  padding:0!important;
+  overflow:hidden;
+  background:#0a0a0a;
+}
+.landscape-only img{
+  position:absolute;
+  display:block;
+  height:auto!important;
+  max-width:none!important;
+  width:300%!important;
+  top:50%;
+  transform:translateY(-50%);
+}
+.den-landscape img{left:0;}
+.antio-landscape img{left:-185%;}
+.landscape-shade{
+  position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(0,0,0,.02) 25%,rgba(0,0,0,.72) 100%);
+}
+.landscape-title{
+  position:absolute;left:22px;top:20px;
+  color:#f4f0e9;
+  font-family:Georgia,serif;
+  font-weight:900;
+  font-size:29px;line-height:.98;
+  letter-spacing:1px;
+  text-shadow:0 4px 16px rgba(0,0,0,.7);
+}
+.den-landscape .landscape-title{color:#fff4dc;}
+.antio-landscape .landscape-title{color:#f5ead6;}
+.antio-landscape .landscape-title em{color:#b21924;font-style:normal;}
+.landscape-credit{
+  position:absolute;left:22px;right:22px;bottom:17px;
+  color:#c8a56a;text-align:left;
+  font-family:Arial,Helvetica,sans-serif;
+  font-size:12px;line-height:1.5;
+  letter-spacing:1.6px;font-weight:700;
+}
+.landscape-credit span{color:#eee;font-size:9px;letter-spacing:1.3px;}
+.landscape-credit b{font-size:9px;letter-spacing:2px;}
+
 .music.new-release .release-cover{
   min-height:220px;
   padding:0;
@@ -379,9 +424,23 @@ footer{background:#050505}
       <p class="release-credit">Στίχοι &amp; Μουσική: ΝΑΣΟΣ</p>
       <a class="release-link" href="https://open.spotify.com/album/5DNadGBFFLwVBtaZR2XBVW" target="_blank" rel="noopener noreferrer">♫ ΑΚΟΥΣΕ ΣΤΟ SPOTIFY</a>
     </article>
-    <article class="music"><div class="cover real-cover"><img src="NASOS_DEN_ME_XEREIS_LANDSCAPE.svg" alt="Δεν Με Ξέρεις — χωρίς πορτρέτο"></div><h3>Δεν Με Ξέρεις</h3><p>Κυκλοφορημένο τραγούδι</p><button onclick="demo('ΔΕΝ ΜΕ ΞΕΡΕΙΣ',this)">▶ ΑΚΟΥΣΕ ΤΟ ΤΡΑΓΟΥΔΙ</button><a href="https://open.spotify.com/search/%CE%9D%CE%91%CE%A3%CE%9F%CE%A3%20%CE%94%CE%B5%CE%BD%20%CE%9C%CE%B5%20%CE%9E%CE%AD%CF%81%CE%B5%CE%B9%CF%82" target="_blank" rel="noopener noreferrer" style="display:inline-block;margin:10px 0 0 10px;padding:10px 18px;border:1px solid #555;color:#eee;background:transparent;text-decoration:none;font-weight:700;">♫ SPOTIFY</a></article>
+    <article class="music">
+  <div class="cover landscape-only den-landscape">
+    <img src="DEN_ME_XEREIS_NASOS_DistroKid_3000x3000.png" alt="Δεν Με Ξέρεις — τοπίο">
+    <div class="landscape-shade"></div>
+    <div class="landscape-title">ΔΕΝ ΜΕ<br>ΞΕΡΕΙΣ</div>
+    <div class="landscape-credit">ΝΑΣΟΣ<br><span>ΣΤΙΧΟΙ &amp; ΜΟΥΣΙΚΗ: ΝΑΣΟΣ</span><br><b>SPECIALIST BOND RECORDS</b></div>
+  </div>
+  <h3>Δεν Με Ξέρεις</h3><p>Κυκλοφορημένο τραγούδι</p><button onclick="demo('ΔΕΝ ΜΕ ΞΕΡΕΙΣ',this)">▶ ΑΚΟΥΣΕ ΤΟ ΤΡΑΓΟΥΔΙ</button><a href="https://open.spotify.com/search/%CE%9D%CE%91%CE%A3%CE%9F%CE%A3%20%CE%94%CE%B5%CE%BD%20%CE%9C%CE%B5%20%CE%9E%CE%AD%CF%81%CE%B5%CE%B9%CF%82" target="_blank" rel="noopener noreferrer" style="display:inline-block;margin:10px 0 0 10px;padding:10px 18px;border:1px solid #555;color:#eee;background:transparent;text-decoration:none;font-weight:700;">♫ SPOTIFY</a></article>
     <article class="music"><div class="cover real-cover"><img src="ΜΗ ΦΥΓΕΙΣ.jpg" alt="Μη Φύγεις"></div><h3>Μη Φύγεις</h3><p>Κυκλοφορημένο τραγούδι</p><button onclick="demo('ΜΗ ΦΥΓΕΙΣ',this)">▶ ΑΚΟΥΣΕ ΤΟ ΤΡΑΓΟΥΔΙ</button><a href="https://open.spotify.com/search/%CE%9D%CE%91%CE%A3%CE%9F%CE%A3%20%CE%9C%CE%B7%20%CE%A6%CF%8D%CE%B3%CE%B5%CE%B9%CF%82" target="_blank" rel="noopener noreferrer" style="display:inline-block;margin:10px 0 0 10px;padding:10px 18px;border:1px solid #555;color:#eee;background:transparent;text-decoration:none;font-weight:700;">♫ SPOTIFY</a></article>
-    <article class="music"><div class="cover real-cover"><img src="NASOS_MH_MOU_LES_ANTIO_LANDSCAPE.svg" alt="Μη Μου Λες Αντίο — χωρίς πορτρέτο"></div><h3>Μη Μου Λες Αντίο</h3><p>Κυκλοφορημένο τραγούδι</p><button onclick="demo('ΜΗ ΜΟΥ ΛΕΣ ΑΝΤΙΟ',this)">▶ ΑΚΟΥΣΕ ΤΟ ΤΡΑΓΟΥΔΙ</button><a href="https://open.spotify.com/search/%CE%9D%CE%91%CE%A3%CE%9F%CE%A3%20%CE%9C%CE%B7%20%CE%9C%CE%BF%CF%85%20%CE%9B%CE%B5%CF%82%20%CE%91%CE%BD%CF%84%CE%AF%CE%BF" target="_blank" rel="noopener noreferrer" style="display:inline-block;margin:10px 0 0 10px;padding:10px 18px;border:1px solid #555;color:#eee;background:transparent;text-decoration:none;font-weight:700;">♫ SPOTIFY</a></article>
+    <article class="music">
+  <div class="cover landscape-only antio-landscape">
+    <img src="MH_MOU_LES_ANTIO_3000x3000.png" alt="Μη Μου Λες Αντίο — τοπίο">
+    <div class="landscape-shade"></div>
+    <div class="landscape-title">ΜΗ ΜΟΥ ΛΕΣ<br><em>ΑΝΤΙΟ</em></div>
+    <div class="landscape-credit">ΝΑΣΟΣ<br><span>ΣΤΙΧΟΙ &amp; ΜΟΥΣΙΚΗ: ΝΑΣΟΣ</span><br><b>SPECIALIST BOND RECORDS</b></div>
+  </div>
+  <h3>Μη Μου Λες Αντίο</h3><p>Κυκλοφορημένο τραγούδι</p><button onclick="demo('ΜΗ ΜΟΥ ΛΕΣ ΑΝΤΙΟ',this)">▶ ΑΚΟΥΣΕ ΤΟ ΤΡΑΓΟΥΔΙ</button><a href="https://open.spotify.com/search/%CE%9D%CE%91%CE%A3%CE%9F%CE%A3%20%CE%9C%CE%B7%20%CE%9C%CE%BF%CF%85%20%CE%9B%CE%B5%CF%82%20%CE%91%CE%BD%CF%84%CE%AF%CE%BF" target="_blank" rel="noopener noreferrer" style="display:inline-block;margin:10px 0 0 10px;padding:10px 18px;border:1px solid #555;color:#eee;background:transparent;text-decoration:none;font-weight:700;">♫ SPOTIFY</a></article>
     <article class="music"><div class="cover real-cover"><img src="NASOS_Dose_Mou_Thalassa_Na_Pio_DistroKid_3000x3000.jpg" alt="Δώσε Μου Θάλασσα Να Πιω"></div><h3>Δώσε Μου Θάλασσα Να Πιω</h3><p>Κυκλοφορημένο τραγούδι</p><button onclick="demo('ΔΩΣΕ ΜΟΥ ΘΑΛΑΣΣΑ ΝΑ ΠΙΩ',this)">▶ ΑΚΟΥΣΕ ΤΟ ΤΡΑΓΟΥΔΙ</button><a href="https://open.spotify.com/search/%CE%9D%CE%91%CE%A3%CE%9F%CE%A3%20%CE%94%CF%8E%CF%83%CE%B5%20%CE%9C%CE%BF%CF%85%20%CE%98%CE%AC%CE%BB%CE%B1%CF%83%CF%83%CE%B1%20%CE%9D%CE%B1%20%CE%A0%CE%B9%CF%89" target="_blank" rel="noopener noreferrer" style="display:inline-block;margin:10px 0 0 10px;padding:10px 18px;border:1px solid #555;color:#eee;background:transparent;text-decoration:none;font-weight:700;">♫ SPOTIFY</a></article>
   </div>
 </div>
