@@ -372,7 +372,12 @@ footer{background:#050505}
   gtag('config', 'G-0K0T1DG80K');
 </script>
 <!-- End Google Analytics 4 -->
-</head>
+<style>
+.calendar-legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:18px;color:#aaa;font-size:12px}.calendar-legend span{display:flex;align-items:center;gap:6px}.dot{width:9px;height:9px;border-radius:50%;display:inline-block}.dot.available{background:#55b985}.dot.booked{background:#d96c6c}.dot.pending{background:#d7b25f}
+.days button{position:relative}.days button.has-status:after{content:"";position:absolute;bottom:4px;left:50%;transform:translateX(-50%);width:5px;height:5px;border-radius:50%;background:#55b985}.days button.status-booked:after{background:#d96c6c}.days button.status-pending:after{background:#d7b25f}.days button.today{outline:1px solid #c8a56a}
+.booking-panel{min-width:0}.day-details{color:#bbb;line-height:1.7;margin:14px 0 22px}.day-status{display:inline-block;padding:5px 10px;border:1px solid #444;border-radius:20px;font-size:12px;margin-top:12px}.day-status.available{color:#7bd6a5;border-color:#38684d}.day-status.booked{color:#f28c8c;border-color:#754141}.day-status.pending{color:#e3c36c;border-color:#766333}
+.booking-form{display:grid;gap:9px;border-top:1px solid #333;padding-top:18px}.booking-form h3{margin:0 0 5px}.booking-form label{font-size:12px;color:#aaa}.booking-form input,.booking-form textarea{width:100%;padding:12px;background:#080808;color:#eee;border:1px solid #444;border-radius:4px;font:inherit}.booking-form textarea{resize:vertical}.booking-form .btn{margin-top:8px}.form-note{font-size:11px;color:#888;margin:0}
+</style></head>
 <body>
 <header><div class="logo">ΝΑΣΟΣ</div><nav><a href="#home">Αρχική</a><a href="#about">Βιογραφία</a><a href="#music">Μουσική</a><a href="#latest-release">Νέα κυκλοφορία</a><a href="#calendar">Ημερολόγιο</a><a href="#stories">Ιστορίες</a><a href="#contact">Επικοινωνία</a><a class="songs-link" href="songs-for-sale.html">SONGS FOR SALE</a></nav></header>
 
@@ -481,7 +486,7 @@ footer{background:#050505}
 </div>
 <div style="text-align:center;max-width:900px;margin:0 auto;"><p style="color:#b9b0b2;">Όλα τα διαθέσιμα τραγούδια του Νάσου βρίσκονται στον επίσημο κατάλογο.</p><a href="songs.html" style="display:inline-block;margin-top:12px;padding:14px 24px;border:1px solid #c8a56a;border-radius:6px;background:#090909;color:#c8a56a;text-decoration:none;font-weight:700;letter-spacing:2px;font-size:13px;">♫ SONGS CATALOGUE — 45</a></div>
 </section>
-<section id="calendar"><div class="eyebrow">CALENDAR</div><h2>Ημερολόγιο</h2><div class="calendar-wrap"><div class="calendar"><div class="cal-head"><button onclick="changeMonth(-1)">‹</button><div class="cal-title" id="monthTitle"></div><button onclick="changeMonth(1)">›</button></div><div class="week"><div>ΔΕ</div><div>ΤΡ</div><div>ΤΕ</div><div>ΠΕ</div><div>ΠΑ</div><div>ΣΑ</div><div>ΚΥ</div></div><div class="days" id="days"></div></div><div class="notes"><h3>Επιλεγμένη ημερομηνία</h3><div class="selected-date" id="selectedDate">—</div><p>Εδώ μπορούμε να προσθέσουμε αργότερα εμφανίσεις, live, κυκλοφορίες, πρόβες και σημαντικές ημερομηνίες.</p></div></div></section>
+<section id="calendar"><div class="eyebrow">LIVE & BOOKINGS</div><h2>Ημερολόγιο εμφανίσεων</h2><p style="color:#aaa;max-width:760px">Επίλεξε ημερομηνία για να δεις τη διαθεσιμότητα του Νάσου ή να στείλεις αίτημα για εμφάνιση.</p><div class="calendar-wrap"><div class="calendar"><div class="cal-head"><button onclick="changeMonth(-1)" aria-label="Προηγούμενος μήνας">‹</button><div class="cal-title" id="monthTitle"></div><button onclick="changeMonth(1)" aria-label="Επόμενος μήνας">›</button></div><div class="week"><div>ΔΕ</div><div>ΤΡ</div><div>ΤΕ</div><div>ΠΕ</div><div>ΠΑ</div><div>ΣΑ</div><div>ΚΥ</div></div><div class="days" id="days"></div><div class="calendar-legend"><span><i class="dot available"></i> Διαθέσιμος</span><span><i class="dot booked"></i> Κλεισμένος</span><span><i class="dot pending"></i> Υπό συζήτηση</span></div></div><div class="notes booking-panel"><div class="eyebrow">ΕΠΙΛΕΓΜΕΝΗ ΗΜΕΡΟΜΗΝΙΑ</div><div class="selected-date" id="selectedDate">Επίλεξε μια ημερομηνία</div><div id="dayDetails" class="day-details">Διάλεξε ημέρα από το ημερολόγιο για να δεις τις πληροφορίες.</div><form id="bookingForm" class="booking-form"><h3>Αίτημα κράτησης</h3><input id="bookingDate" name="date" type="hidden"><label for="bookingName">Ονοματεπώνυμο</label><input id="bookingName" name="name" required placeholder="Το όνομά σας"><label for="bookingEmail">Email ή τηλέφωνο</label><input id="bookingEmail" name="contact" required placeholder="Πώς να επικοινωνήσουμε μαζί σας;"><label for="bookingCity">Πόλη / Χώρος</label><input id="bookingCity" name="venue" placeholder="Πόλη ή όνομα χώρου"><label for="bookingMessage">Πληροφορίες εκδήλωσης</label><textarea id="bookingMessage" name="message" rows="3" placeholder="Είδος εκδήλωσης, ώρα και άλλες λεπτομέρειες"></textarea><button class="btn" type="submit">ΑΠΟΣΤΟΛΗ ΑΙΤΗΜΑΤΟΣ</button><p class="form-note">Το αίτημα δεν αποτελεί επιβεβαιωμένη κράτηση. Θα επικοινωνήσουμε μαζί σας.</p></form></div></div></section>
 
 <section id="stories"><div class="eyebrow">STORIES</div><h2>Ιστορίες</h2><div class="stories"><article class="story"><span>01</span><h3>Από την Ελλάδα στη Νέα Υόρκη</h3><p>Μια σημαντική περίοδος στο Manhattan και μια νέα μουσική εμπειρία.</p></article><article class="story"><span>02</span><h3>Η Κωνσταντινούπολη</h3><p>Χρόνια μουσικής παρουσίας και βαθιά σχέση με το τουρκικό τραγούδι.</p></article><article class="story"><span>03</span><h3>Η σκηνή</h3><p>Πάνω από τρεις δεκαετίες ερμηνείας, εμπειριών και μουσικής δημιουργίας.</p></article></div></section>
 
@@ -633,6 +638,52 @@ function changeMonth(n){view.setMonth(view.getMonth()+n);drawCal()}drawCal();
   setTimeout(fix,500);setTimeout(fix,1500);
 })();
 </script>
-</body></html>
+<script>
+(function(){
+const dataKey="nasosCalendarEntriesV1";
+const monthNames=["Ιανουάριος","Φεβρουάριος","Μάρτιος","Απρίλιος","Μάιος","Ιούνιος","Ιούλιος","Αύγουστος","Σεπτέμβριος","Οκτώβριος","Νοέμβριος","Δεκέμβριος"];
+const entries={};
+try{Object.assign(entries,JSON.parse(localStorage.getItem(dataKey)||"{}"))}catch(e){}
+let current=new Date(); current=new Date(current.getFullYear(),current.getMonth(),1);
+let selected=null;
+const statusText={available:"Διαθέσιμος για εμφάνιση",booked:"Κλεισμένος",pending:"Υπό συζήτηση"};
+function key(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function greekDate(d){return new Intl.DateTimeFormat("el-GR",{dateStyle:"full"}).format(d)}
+function render(){
+ const title=document.getElementById("monthTitle"),days=document.getElementById("days");
+ if(!title||!days)return;
+ title.textContent=monthNames[current.getMonth()]+" "+current.getFullYear();days.innerHTML="";
+ const first=new Date(current.getFullYear(),current.getMonth(),1),last=new Date(current.getFullYear(),current.getMonth()+1,0),offset=(first.getDay()+6)%7;
+ for(let i=0;i<offset;i++){const e=document.createElement("button");e.className="empty";e.disabled=true;e.setAttribute("aria-hidden","true");days.appendChild(e)}
+ for(let n=1;n<=last.getDate();n++){
+  const d=new Date(current.getFullYear(),current.getMonth(),n),k=key(d),entry=entries[k]||{},b=document.createElement("button");
+  b.textContent=n;b.type="button";if(selected&&key(selected)===k)b.classList.add("selected");
+  if(k===key(new Date()))b.classList.add("today");
+  if(entry.status){b.classList.add("has-status","status-"+entry.status);b.title=statusText[entry.status]||""}
+  b.setAttribute("aria-label",greekDate(d));b.onclick=()=>choose(d);days.appendChild(b);
+ }
+}
+function choose(d){
+ selected=d;document.getElementById("selectedDate").textContent=greekDate(d);
+ document.getElementById("bookingDate").value=greekDate(d);
+ const e=entries[key(d)]||{},status=e.status||"available";
+ const details=document.getElementById("dayDetails");
+ details.innerHTML="";
+ const badge=document.createElement("span");badge.className="day-status "+status;badge.textContent=statusText[status]||statusText.available;details.appendChild(badge);
+ if(e.info){const p=document.createElement("p");p.textContent=e.info;details.appendChild(p)}
+ if(status==="booked"){const p=document.createElement("p");p.textContent="Για τυχόν αλλαγές ή άλλη ημερομηνία, επικοινώνησε μαζί μας.";details.appendChild(p)}
+ render();
+}
+window.changeMonth=function(n){current.setMonth(current.getMonth()+n);render()};
+const form=document.getElementById("bookingForm");
+form.addEventListener("submit",function(ev){
+ ev.preventDefault();if(!selected){alert("Επίλεξε πρώτα ημερομηνία από το ημερολόγιο.");return}
+ const fd=new FormData(form),subject="Αίτημα εμφάνισης Νάσου — "+fd.get("date");
+ const body=["Νέο αίτημα κράτησης","Ημερομηνία: "+fd.get("date"),"Ονοματεπώνυμο: "+fd.get("name"),"Email ή τηλέφωνο: "+fd.get("contact"),"Πόλη / χώρος: "+(fd.get("venue")||"-"),"Πληροφορίες: "+(fd.get("message")||"-")].join("\n");
+ window.location.href="mailto:nasosproduser@gmail.com?subject="+encodeURIComponent(subject)+"&body="+encodeURIComponent(body);
+});
+render();choose(new Date());
+})();
+</script></body></html>
 
 
